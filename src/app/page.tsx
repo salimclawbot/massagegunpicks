@@ -1,6 +1,49 @@
-import { Metadata } from "next"; import Link from "next/link"; import { getAllSlugs, getArticle } from "@/lib/articles";
-export const metadata: Metadata = { title:"Massage Gun Picks: Best Reviews & Guides (2026)",description:"Independent massage gun reviews for 2026. Find the best percussive therapy device for recovery, pain relief, and muscle soreness — expert tested.",alternates:{canonical:"https://massagegunpicks.com"}};
+import { Metadata } from "next";
+import Link from "next/link";
+import { getAllSlugs, getArticle } from "@/lib/articles";
+
+export const metadata: Metadata = {
+  title: "Best Sleep Products for Better Rest (2026)",
+  description:
+    "Expert-tested pillows, toppers, and sleep support gear compared for better rest in 2026.",
+  alternates: {
+    canonical: "https://sleeproductpicks.vercel.app",
+  },
+};
+
 export default async function HomePage() {
-  const articles = (await Promise.all(getAllSlugs().map(s=>getArticle(s)))).filter(Boolean);
-  return (<main className="max-w-4xl mx-auto px-4 py-12"><h1 className="text-4xl font-bold text-slate-900 mb-4">Massage Gun Picks</h1><p className="text-xl text-slate-600 mb-12">Expert massage gun reviews and buying guides for 2026.</p><div className="grid gap-6">{articles.map(a=>a&&(<Link key={a.slug} href={`/${a.slug}`} className="block p-6 border border-slate-200 rounded-xl hover:border-green-400 hover:shadow-md transition-all"><h2 className="text-xl font-semibold text-slate-900 mb-2">{a.title}</h2><p className="text-slate-600">{a.description}</p><span className="inline-block mt-3 text-sm font-medium text-green-600">Read guide →</span></Link>))}</div></main>);
+  const articles = (await Promise.all(getAllSlugs().map((slug) => getArticle(slug)))).filter(Boolean);
+
+  return (
+    <main className="mx-auto max-w-4xl px-4 py-12">
+      <section className="mb-12">
+        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-indigo-600">Sleep Picks</p>
+        <h1 className="mb-4 text-4xl font-bold text-slate-900 sm:text-5xl">
+          Best Sleep Products for Better Rest (2026)
+        </h1>
+        <p className="max-w-2xl text-xl text-slate-600">
+          Expert-tested pillows, toppers, and sleep gear. Wake up without the aches.
+        </p>
+      </section>
+
+      <section className="grid gap-6">
+        {articles.map(
+          (article) =>
+            article && (
+              <Link
+                key={article.slug}
+                href={`/${article.slug}`}
+                className="block rounded-xl border border-slate-200 p-6 transition-all hover:border-[#4f46e5] hover:shadow-md"
+              >
+                <h2 className="mb-2 text-xl font-semibold text-slate-900 transition-colors hover:text-[#4f46e5]">
+                  {article.title}
+                </h2>
+                <p className="text-slate-600">{article.description}</p>
+                <span className="mt-3 inline-block text-sm font-medium text-[#4f46e5]">Read guide →</span>
+              </Link>
+            ),
+        )}
+      </section>
+    </main>
+  );
 }

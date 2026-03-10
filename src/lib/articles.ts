@@ -21,6 +21,7 @@ export interface Article {
 }
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
+const SITE_URL = "https://sleeproductpicks.vercel.app";
 
 function toSlug(text: string): string {
   return text.toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-").trim();
@@ -29,7 +30,9 @@ function toSlug(text: string): string {
 function parseJsonField(value: unknown): Record<string, unknown> | null {
   if (!value || typeof value !== "string") return null;
   try {
-    const normalized = value.replaceAll("https://massagegunpicks.com", "https://massagegunpicks.com");
+    const normalized = value
+      .replaceAll("https://massagegunpicks.com", SITE_URL)
+      .replaceAll("https://sleeproductpicks.vercel.app", SITE_URL);
     return JSON.parse(normalized);
   } catch {
     return null;
@@ -56,15 +59,15 @@ export async function getArticle(slug: string): Promise<Article | null> {
   const result = await remark().use(remarkGfm).use(html, { sanitize: false }).process(content);
 
   const title = (data.title as string) || slug;
-  const description = (data.meta_description as string) || "Massage gun guide article.";
-  const author = (data.author as string) || "Dr. Alex Chen";
-  const date = (data.datePublished as string) || "2026-03-10";
+  const description = (data.meta_description as string) || "Sleep product buying guide.";
+  const author = (data.author as string) || "Dr. Emma Nguyen";
+  const date = (data.datePublished as string) || "2026-03-11";
   const dateModified = (data.dateModified as string) || date;
   const category = "Guide";
 
   let htmlContent = result.toString();
 
-  htmlContent = htmlContent.replace(/<(h[2-4])>(.*?)<\/\1>/g, (match, tag, text) => {
+  htmlContent = htmlContent.replace(/<(h[2-4])>(.*?)<\/\1>/g, (_match, tag, text) => {
     const cleanText = text.replace(/<[^>]+>/g, "");
     const id = toSlug(cleanText);
     return `<${tag} id="${id}">${text}</${tag}>`;
@@ -92,8 +95,8 @@ export async function getArticle(slug: string): Promise<Article | null> {
 export function getAllSlugs(): string[] {
   return fs
     .readdirSync(CONTENT_DIR)
-    .filter((f) => f.endsWith(".md"))
-    .map((f) => f.replace(/\.md$/, ""));
+    .filter((fileName) => fileName.endsWith(".md"))
+    .map((fileName) => fileName.replace(/\.md$/, ""));
 }
 
 export async function getAllArticles(): Promise<Article[]> {
